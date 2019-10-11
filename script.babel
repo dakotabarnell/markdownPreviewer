@@ -1,0 +1,61 @@
+class MarkdownPreviewer extends React.Component {
+  render() {
+    return (
+      <div id="preview" className='markdown-previewer'>
+        <h4>Markdown previewer</h4>
+        <div dangerouslySetInnerHTML={this.props.markup}></div>
+      </div>
+    );
+  }
+}
+
+class MarkdownEditor extends React.Component {
+  render() {
+    return (
+      <div className='markdown-editor'>
+        <h4>Markdown editor</h4>
+        <textarea id="editor" onChange={this.props.onChange} value={this.props.value}></textarea>
+      </div>
+    );
+  }
+}
+
+class MarkdownContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {text: "# This is a markdown h1 heading\n## and this is an h2 heading\n### and an even smaller heading! ###\n---\nYou can do ~~linethrough~~ with two tildes, or **bold things** with two asteriks and *italics* with one asterik:\n* Here's a bullet point using an asteriks.\n- and here's one using a minus sign.\n+ and even a plus sign.\n* You can even add links like [www.freecodecamp.org](https://www.freecodecamp.org)\n\n---\n\n>This is a blockquote.\n\n---\n\nTo use inline code, use backticks:\n\n`This is inline code.`\n\nThis is a code block:\n\n```\nconsole.log('inlineCode');\nconsole.log(var);\n\n```\n\n---\n\nHere's how you can insert an image:\n\n![alt text](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-Kjp4Iy9K9aurvHr7ArOC8JrCLAo9uJlb-9pizm3QnWkctEvaaQ)\n\n---\n\nThings you need to start:\n1. A lot of will power and time.\n2. ~~Zero patience.~~\n\nHave a great day! &#9786;"};
+    this.handleChange = this.handleChange.bind(this);
+  }
+  createMarkup() {
+    var options = {sanitize: true};
+    return {__html: marked(this.state.text, options)};
+  }
+
+  handleChange(e) {
+    this.setState({
+      text: e.target.value
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <MarkdownEditor onChange={this.handleChange} value={this.state.text}/>
+        <MarkdownPreviewer markup={this.createMarkup()} />
+      </div>
+    );
+  }
+}
+
+class App extends React.Component {
+  render() {
+    return (
+      <MarkdownContainer />
+    );
+  }
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('app')
+);
